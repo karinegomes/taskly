@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { ref } from 'vue';
 import { Input, Textarea, Select } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import InputError from '@/components/InputError.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -13,14 +16,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 // Form state
-const form = ref({
+const form = useForm({
   title: '',
   description: '',
   status: '',
   priority: '',
   due_date: '',
   assigned_to: '',
-})
+});
 
 // Options for select fields
 const statusOptions = [
@@ -44,35 +47,12 @@ const userOptions = [
 ]
 
 // Form handling
-const errors = ref({})
-const isSubmitting = ref(false)
-
-const handleSubmit = async () => {
-  isSubmitting.value = true
-  errors.value = {}
-
-  try {
-    // Replace with real POST logic (e.g., Inertia.post or axios)
-    console.log('Submitting', form.value)
-
-    // Fake delay
-    await new Promise((r) => setTimeout(r, 1000))
-
-    // Reset form on success
-    form.value = {
-      title: '',
-      description: '',
-      status: '',
-      priority: '',
-      due_date: '',
-      assigned_to: '',
-    }
-  } catch (e) {
-    // Example error structure – adapt to your backend
-    errors.value = e.response?.data?.errors || {}
-  } finally {
-    isSubmitting.value = false
-  }
+const handleSubmit = () => {
+  form.post('/tasks', {
+    onSuccess: () => {
+      form.reset()
+    },
+  });
 }
 </script>
 
@@ -88,71 +68,112 @@ const handleSubmit = async () => {
         <h2 class="text-xl font-semibold text-gray-800">Create Task</h2>
 
         <!-- Title -->
-        <Input
-          v-model="form.title"
-          label="Title"
-          placeholder="Enter task title"
-          :error="errors.title"
-          required
-        />
+        <div class="flex flex-col gap-2">
+          <Label for="title">Title *</Label>
+          <Input
+            v-model="form.title"
+            label="Title"
+            placeholder="Enter task title"
+            name="title"
+          />
+          <InputError
+            v-if="form.errors.title"
+            :message="form.errors.title"
+          />
+        </div>
 
         <!-- Description -->
-        <Textarea
-          v-model="form.description"
-          label="Description"
-          placeholder="Enter task details"
-          :error="errors.description"
-          rows="4"
-        />
-
-        <Select
-          v-model="form.status"
-          :options="statusOptions"
-          label="Status"
-        />
-
-        <pre>{{ form.status }}</pre>
+        <div class="flex flex-col gap-2">
+          <Label for="description">
+            Description
+          </Label>
+          <Textarea
+            v-model="form.description"
+            label="Description"
+            placeholder="Enter task details"
+            name="description"
+            rows="4"
+          />
+          <InputError
+            v-if="form.errors.description"
+            :message="form.errors.description"
+          />
+        </div>
 
         <!-- Status -->
-        <select
-          v-model="form.status"
-          label="Status"
-          :options="statusOptions"
-          :error="errors.status"
-          required
-        />
+        <div class="flex flex-col gap-2">
+          <Label for="status">
+            Status *
+          </Label>
+          <Select
+            v-model="form.status"
+            :options="statusOptions"
+            label="Select the status"
+            name="status"
+          />
+          <InputError
+            v-if="form.errors.status"
+            :message="form.errors.status"
+          />
+        </div>
 
         <!-- Priority -->
-        <r-select
-          v-model="form.priority"
-          label="Priority"
-          :options="priorityOptions"
-          :error="errors.priority"
-          required
-        />
+        <div class="flex flex-col gap-2">
+          <Label for="priority">
+            Priority *
+          </Label>
+          <Select
+            v-model="form.priority"
+            :options="priorityOptions"
+            label="Select the priority"
+            name="priority"
+          />
+          <InputError
+            v-if="form.errors.priority"
+            :message="form.errors.priority"
+          />
+        </div>
 
         <!-- Due Date -->
-        <r-input
-          v-model="form.due_date"
-          type="date"
-          label="Due Date"
-          :error="errors.due_date"
-        />
+        <div class="flex flex-col gap-2">
+          <Label for="due_date">
+            Due date
+          </Label>
+          <Input
+            v-model="form.due_date"
+            label="Due date"
+            placeholder="Enter due date"
+            name="due_date"
+            :error="form.errors.due_date"
+          />
+          <InputError
+            v-if="form.errors.due_date"
+            :message="form.errors.due_date"
+          />
+        </div>
 
         <!-- Assigned To -->
-        <r-select
-          v-model="form.assigned_to"
-          label="Assign To"
-          :options="userOptions"
-          :error="errors.assigned_to"
-          placeholder="Select a user"
-        />
+        <div class="flex flex-col gap-2">
+          <Label for="assigned_to">
+            Assign to
+          </Label>
+          <Select
+            v-model="form.assigned_to"
+            :options="userOptions"
+            label="Select the user"
+            name="assigned_to"
+          />
+          <InputError
+            v-if="form.errors.assigned_to"
+            :message="form.errors.assigned_to"
+          />
+        </div>
 
         <!-- Submit Button -->
         <div class="pt-4">
-          <r-button type="submit" variant="primary" :loading="isSubmitting">
-            Create Task
-          </r-button>
+          <Button type="submit" :loading="form.processing">
+            Create task
+          </Button>
         </div>
       </form>
     </div>

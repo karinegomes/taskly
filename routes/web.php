@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::redirect('settings', '/settings/profile');
 
     Route::get('tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+    Route::post('tasks', [TaskController::class, 'store'])->name('tasks.store');
 
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

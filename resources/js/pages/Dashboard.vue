@@ -3,7 +3,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -24,7 +23,7 @@ function createTask () {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4">
             <Button
-                class="flex ml-auto mb-4 cursor-pointer"
+                class="flex ml-auto mb-4"
                 @click="createTask"
             >
                 Create task
