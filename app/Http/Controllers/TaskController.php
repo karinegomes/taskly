@@ -25,6 +25,6 @@ class TaskController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
+        return redirect()->route('dashboard')->with('success', 'Task created successfully.');
     }
 }
