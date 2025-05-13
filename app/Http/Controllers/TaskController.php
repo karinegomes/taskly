@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Resources\UserDropdownResource;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Task;
 
@@ -10,7 +12,11 @@ class TaskController extends Controller
 {
     public function create()
     {
-        return Inertia::render('tasks/CreateTask');
+        $users = UserDropdownResource::collection(User::all());
+
+        return Inertia::render('tasks/CreateTask', [
+            'users' => $users,
+        ]);
     }
 
     public function store(StoreTaskRequest $request)

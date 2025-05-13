@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { ref } from 'vue';
@@ -15,6 +15,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
+const page = usePage();
 // Form state
 const form = useForm({
   title: '',

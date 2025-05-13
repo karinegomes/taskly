@@ -16,18 +16,6 @@ require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
-    Route::redirect('settings', '/settings/profile');
-
     Route::get('tasks/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('tasks', [TaskController::class, 'store'])->name('tasks.store');
-
-    Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('settings/password', [PasswordController::class, 'edit'])->name('password.edit');
-    Route::put('settings/password', [PasswordController::class, 'update'])->name('password.update');
-
-    Route::get('settings/appearance', function () {
-        return Inertia::render('settings/Appearance');
-    })->name('appearance');
 });
