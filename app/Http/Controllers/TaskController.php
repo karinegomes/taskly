@@ -12,7 +12,7 @@ class TaskController extends Controller
 {
     public function create()
     {
-        $users = UserDropdownResource::collection(User::all());
+        $users = UserDropdownResource::collection(User::orderBy('name')->get());
 
         return Inertia::render('tasks/CreateTask', [
             'users' => $users,

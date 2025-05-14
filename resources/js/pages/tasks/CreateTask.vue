@@ -16,6 +16,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const page = usePage();
+const usersList = ref(page.props.users.data);
+
 // Form state
 const form = useForm({
   title: '',
@@ -38,13 +40,6 @@ const priorityOptions = [
   { label: 'Medium', value: 'medium' },
   { label: 'High', value: 'high' },
   { label: 'Urgent', value: 'urgent' },
-]
-
-// Mocked user list – replace with real data from props or API
-const userOptions = [
-  { label: 'Alice', value: 1 },
-  { label: 'Bob', value: 2 },
-  { label: 'Charlie', value: 3 },
 ]
 
 // Form handling
@@ -160,7 +155,7 @@ const handleSubmit = () => {
           </Label>
           <Select
             v-model="form.assigned_to"
-            :options="userOptions"
+            :options="usersList"
             label="Select the user"
             name="assigned_to"
           />
