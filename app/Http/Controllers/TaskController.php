@@ -10,6 +10,13 @@ use App\Models\Task;
 
 class TaskController extends Controller
 {
+    public function index()
+    {
+        $tasks = Task::all();
+
+        return Inertia::render('tasks/Tasks', ['tasks' => $tasks]);
+    }
+
     public function create()
     {
         $users = UserDropdownResource::collection(User::orderBy('name')->get());

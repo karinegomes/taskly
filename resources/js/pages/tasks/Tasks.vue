@@ -3,10 +3,9 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Table } from '@/components/ui/table';
-import Toast from '../components/ui/toast/Toast.vue';
-
+import Toast from '../../components/ui/toast/Toast.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -16,18 +15,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const columns = [
-  { key: 'id', label: 'ID' },
-  { key: 'name', label: 'Name' },
-  { key: 'email', label: 'Email' },
-  { key: 'status', label: 'Status' }
+  { key: 'title', label: 'Title' },
+  { key: 'description', label: 'Description' },
+  { key: 'status', label: 'Status' },
+  { key: 'priority', label: 'Priority' },
+  { key: 'due_date', label: 'Due date' },
+  { key: 'assigned_to', label: 'Assigned to' },
 ];
-
-const data = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', status: 'Active' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', status: 'Inactive' },
-  // ... more data
-];
-
 
 const page = usePage();
 const open = ref(false);
@@ -36,6 +30,8 @@ function createTask() {
   router.visit('/tasks/create');
 }
 
+const tasks = computed(() => page.props.tasks);
+
 watch(
   () => page.props?.flash?.success,
   (value) => {
@@ -43,7 +39,7 @@ watch(
       open.value = true;
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
@@ -52,20 +48,10 @@ watch(
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="p-4">
-      <Button class="mb-4 ml-auto flex" @click="createTask">
-        Create task
-      </Button>
-      <Table
-        :columns="columns"
-        :data="data"
-        :striped="true"
-        :hover="true"
-      />
+      <Button class="mb-4 ml-auto flex" @click="createTask"> Create task </Button>
+      <Table :columns="columns" :data="tasks" :striped="true" :hover="true" />
     </div>
 
-    <Toast
-      v-model:open="open"
-      :message="page.props.flash?.success"
-    />
+    <Toast v-model:open="open" :message="page.props.flash?.success" />
   </AppLayout>
 </template>
