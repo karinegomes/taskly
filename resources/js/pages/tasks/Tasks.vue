@@ -51,7 +51,6 @@ watch(
       <Button class="mb-4 ml-auto flex" @click="createTask"> Create task </Button>
       <Table :columns="columns" :data="tasks" :striped="true" :hover="true" />
     </div>
-
     <Toast v-model:open="open" :message="page.props.flash?.success" />
   </AppLayout>
 </template>

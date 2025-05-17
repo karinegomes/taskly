@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Input, Select, Textarea } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/InputError.vue';
 import DateInput from '@/components/ui/input/DateInput.vue';
+import { useUsersStore } from '@/stores/users.store';
+import { storeToRefs } from 'pinia';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -16,8 +18,8 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-const page = usePage();
-const usersList = ref(page.props.users.data);
+const { fetchUsers } = useUsersStore();
+const { users: usersList } = storeToRefs(useUsersStore());
 
 const dueDate = ref(null);
 
@@ -59,6 +61,10 @@ const handleSubmit = () => {
     },
   });
 };
+
+onMounted(async () => {
+  await fetchUsers();
+})
 </script>
 
 <template>
@@ -107,7 +113,10 @@ const handleSubmit = () => {
         </div>
 
         <!-- Assigned To -->
-        <div class="flex flex-col gap-2">
+        <div
+          v-if="usersList"
+          class="flex flex-col gap-2"
+        >
           <Label for="assigned_to"> Assign to </Label>
           <Select v-model="form.assigned_to" :options="usersList" label="Select the user" name="assigned_to" />
           <InputError v-if="form.errors.assigned_to" :message="form.errors.assigned_to" />
