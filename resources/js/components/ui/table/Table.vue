@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Pagination from '@/components/ui/Pagination.vue';
+
 interface Column {
   key: string;
   label: string;
@@ -9,9 +11,17 @@ interface TableProps {
   data: any[];
   striped?: boolean;
   hover?: boolean;
+  meta?: any;
+  links?: any;
 }
 
 defineProps<TableProps>();
+
+const emits = defineEmits(['onPageChange']);
+
+const onPageChange = (page: number) => {
+  emits('onPageChange', page);
+}
 </script>
 
 <template>
@@ -50,4 +60,11 @@ defineProps<TableProps>();
       </tbody>
     </table>
   </div>
+  <Pagination
+    v-if="meta"
+    :meta="meta"
+    :links="links"
+    @onPageChange="onPageChange"
+  />
+
 </template>

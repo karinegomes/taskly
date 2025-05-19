@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { Table } from '@/components/ui/table';
 import Toast from '../../components/ui/toast/Toast.vue';
+import { useTasksStore } from '@/stores/tasks.store';
+import { storeToRefs } from 'pinia';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -24,13 +26,18 @@ const columns = [
 ];
 
 const page = usePage();
+const { fetch } = useTasksStore();
+const { tasks, meta } = storeToRefs(useTasksStore());
+
 const open = ref(false);
 
 function createTask() {
   router.visit('/tasks/create');
 }
 
-const tasks = computed(() => page.props.tasks);
+function handlePageChange(page: number) {
+  fetch(page);
+}
 
 watch(
   () => page.props?.flash?.success,
@@ -41,6 +48,10 @@ watch(
   },
   { immediate: true },
 );
+
+onMounted(async () => {
+  await fetch();
+});
 </script>
 
 <template>
@@ -49,7 +60,16 @@ watch(
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="p-4">
       <Button class="mb-4 ml-auto flex" @click="createTask"> Create task </Button>
-      <Table :columns="columns" :data="tasks" :striped="true" :hover="true" />
+      <Table
+        v-if="tasks.length"
+        :columns="columns"
+        :data="tasks"
+        :striped="true"
+        :hover="true"
+        :meta="meta"
+        :links="[]"
+        @on-page-change="handlePageChange"
+      />
     </div>
     <Toast v-model:open="open" :message="page.props.flash?.success" />
   </AppLayout>
