@@ -12,7 +12,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        $tasks = Task::paginate($perPage);
+        $tasks = Task::with('assignee')->paginate($perPage);
 
         return TaskResource::collection($tasks);
     }
