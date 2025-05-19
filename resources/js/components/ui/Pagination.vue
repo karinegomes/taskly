@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  meta: any,
-  links: any[]
+  meta: any
 }>();
 
 const emits = defineEmits(['onPageChange']);

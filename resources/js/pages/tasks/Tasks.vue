@@ -67,7 +67,6 @@ onMounted(async () => {
         :striped="true"
         :hover="true"
         :meta="meta"
-        :links="[]"
         @on-page-change="handlePageChange"
       />
     </div>

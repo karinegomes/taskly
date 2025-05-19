@@ -12,7 +12,6 @@ interface TableProps {
   striped?: boolean;
   hover?: boolean;
   meta?: any;
-  links?: any;
 }
 
 defineProps<TableProps>();
@@ -63,7 +62,6 @@ const onPageChange = (page: number) => {
   <Pagination
     v-if="meta"
     :meta="meta"
-    :links="links"
     @onPageChange="onPageChange"
   />
 
