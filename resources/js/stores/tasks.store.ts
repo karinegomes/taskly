@@ -8,12 +8,13 @@ export const useTasksStore = defineStore('tasks', {
     }
   },
   actions: {
-    async fetch(page = 1, perPage = 10) {
+    async fetch(page: number = 1, perPage: number = 10, sort: object[] = []) {
       try {
         const response = await axios.get(route("api.tasks.index"), {
           params: {
             page: page,
-            per_page: perPage
+            per_page: perPage,
+            sort: sort
           }
         });
 

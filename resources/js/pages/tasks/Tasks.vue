@@ -35,8 +35,12 @@ function createTask() {
   router.visit('/tasks/create');
 }
 
-function handlePageChange(page: number) {
-  fetch(page);
+async function handlePageChange(page: number) {
+  await fetch(page);
+}
+
+async function handleSortChange(sort: object[]) {
+  await fetch(1, 10, sort);
 }
 
 watch(
@@ -68,6 +72,7 @@ onMounted(async () => {
         :hover="true"
         :meta="meta"
         @on-page-change="handlePageChange"
+        @on-sort-change="handleSortChange"
       />
     </div>
     <Toast v-model:open="open" :message="page.props.flash?.success" />
