@@ -8,6 +8,8 @@ import { Table } from '@/components/ui/table';
 import Toast from '../../components/ui/toast/Toast.vue';
 import { useTasksStore } from '@/stores/tasks.store';
 import { storeToRefs } from 'pinia';
+import { priorityOptions, statusOptions } from '@/constants/options';
+import { Select } from '@/components/ui/input';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -26,8 +28,8 @@ const columns = [
 ];
 
 const page = usePage();
-const { fetch } = useTasksStore();
-const { tasks, meta } = storeToRefs(useTasksStore());
+const { fetch, resetFilters } = useTasksStore();
+const { tasks, meta, sort, filter } = storeToRefs(useTasksStore());
 
 const open = ref(false);
 
@@ -39,8 +41,10 @@ async function handlePageChange(page: number) {
   await fetch(page);
 }
 
-async function handleSortChange(sort: object[]) {
-  await fetch(1, 10, sort);
+async function handleSortChange(_sort: object[]) {
+  sort.value = _sort;
+
+  await fetch();
 }
 
 watch(
@@ -53,7 +57,17 @@ watch(
   { immediate: true },
 );
 
+watch(
+  () => filter.value,
+  async () => {
+    await fetch();
+  },
+  { deep: true }
+);
+
 onMounted(async () => {
+  sort.value = [];
+
   await fetch();
 });
 </script>
@@ -64,6 +78,25 @@ onMounted(async () => {
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="p-4">
       <Button class="mb-4 ml-auto flex" @click="createTask"> Create task </Button>
+      <div class="flex gap-4 items-center mb-4">
+        <span>Filter by</span>
+        <Select
+          v-model="filter.status"
+          :options="statusOptions"
+          label="Status"
+          name="status"
+        />
+        <Select
+          v-model="filter.priority"
+          :options="priorityOptions"
+          label="Priority"
+          name="priority"
+        />
+        <span>Due date</span>
+        <Button variant="outline" @click="resetFilters">
+          Clear filters
+        </Button>
+      </div>
       <Table
         v-if="tasks.length"
         :columns="columns"

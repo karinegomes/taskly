@@ -19,6 +19,12 @@ class TaskController extends Controller
             }
         }
 
+        if ($request->has('filter')) {
+            foreach($request->input('filter') as $key => $value) {
+                $tasks = $tasks->where($key, $value);
+            }
+        }
+
         $perPage = $request->input('per_page', 10);
         $tasks = $tasks->paginate($perPage);
 

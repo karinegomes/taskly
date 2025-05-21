@@ -10,6 +10,7 @@ import InputError from '@/components/InputError.vue';
 import DateInput from '@/components/ui/input/DateInput.vue';
 import { useUsersStore } from '@/stores/users.store';
 import { storeToRefs } from 'pinia';
+import { statusOptions, priorityOptions } from '@/constants/options';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -32,20 +33,6 @@ const form = useForm({
   due_date: '',
   assigned_to: '',
 });
-
-// Options for select fields
-const statusOptions = [
-  { label: 'Pending', value: 'pending' },
-  { label: 'In Progress', value: 'in_progress' },
-  { label: 'Completed', value: 'completed' },
-];
-
-const priorityOptions = [
-  { label: 'Low', value: 'low' },
-  { label: 'Medium', value: 'medium' },
-  { label: 'High', value: 'high' },
-  { label: 'Urgent', value: 'urgent' },
-];
 
 // Form handling
 const handleSubmit = () => {
@@ -130,5 +117,3 @@ onMounted(async () => {
     </div>
   </AppLayout>
 </template>
-
-<style scoped></style>

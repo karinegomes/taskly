@@ -1,20 +1,32 @@
 import { defineStore } from 'pinia';
 
+interface TasksFilter {
+  status: string|null;
+  priority: string|null;
+}
+
+
 export const useTasksStore = defineStore('tasks', {
   state: () => {
     return {
       tasks: [] as object[],
-      meta: null as object
+      meta: null as object | null,
+      sort: [] as object[],
+      filter: {
+        status: null,
+        priority: null
+      } as TasksFilter
     }
   },
   actions: {
-    async fetch(page: number = 1, perPage: number = 10, sort: object[] = []) {
+    async fetch(page: number = 1, perPage: number = 10) {
       try {
         const response = await axios.get(route("api.tasks.index"), {
           params: {
             page: page,
             per_page: perPage,
-            sort: sort
+            sort: this.sort,
+            filter: this.filter
           }
         });
 
@@ -24,6 +36,12 @@ export const useTasksStore = defineStore('tasks', {
         }
       } catch (error) {
         // TODO
+      }
+    },
+    resetFilters() {
+      this.filter = {
+        status: null,
+        priority: null
       }
     }
   }

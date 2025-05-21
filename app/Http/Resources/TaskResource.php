@@ -19,7 +19,7 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'status' => Str::ucfirst($this->status),
+            'status' => Str::replace('_', ' ', Str::ucfirst($this->status)),
             'priority' => Str::ucfirst($this->priority),
             'due_date' => optional($this->due_date)->format('m/d/Y'),
             'assigned_to' => $this->whenLoaded('assignee')?->name,

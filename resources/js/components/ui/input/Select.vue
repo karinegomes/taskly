@@ -17,7 +17,7 @@ import {
 import { useVModel } from '@vueuse/core';
 
 interface Props {
-  modelValue: string|number;
+  modelValue: string|number|null;
   options: object[];
   label: string;
 }
