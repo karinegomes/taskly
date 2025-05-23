@@ -10,6 +10,7 @@ import { useTasksStore } from '@/stores/tasks.store';
 import { storeToRefs } from 'pinia';
 import { priorityOptions, statusOptions } from '@/constants/options';
 import { Select } from '@/components/ui/input';
+import DateInput from '@/components/ui/input/DateInput.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -92,7 +93,12 @@ onMounted(async () => {
           label="Priority"
           name="priority"
         />
-        <span>Due date</span>
+        <div class="flex items-center gap-2">
+          <span>From</span>
+          <DateInput v-model="filter.from_date" />
+          <span>to</span>
+          <DateInput v-model="filter.to_date" />
+        </div>
         <Button variant="outline" @click="resetFilters">
           Clear filters
         </Button>

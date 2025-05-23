@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia';
+import { DateValue } from 'reka-ui';
 
 interface TasksFilter {
   status: string|null;
   priority: string|null;
+  from_date: DateValue|null;
+  to_date: DateValue|null;
 }
 
 
@@ -14,7 +17,9 @@ export const useTasksStore = defineStore('tasks', {
       sort: [] as object[],
       filter: {
         status: null,
-        priority: null
+        priority: null,
+        from_date: null,
+        to_date: null
       } as TasksFilter
     }
   },

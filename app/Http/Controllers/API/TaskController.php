@@ -21,7 +21,16 @@ class TaskController extends Controller
 
         if ($request->has('filter')) {
             foreach($request->input('filter') as $key => $value) {
-                $tasks = $tasks->where($key, $value);
+                if ($key === 'status' || $key === 'priority') {
+                    $tasks = $tasks->where($key, $value);
+                }
+            }
+
+            if ($request->has('filter.from_date') && $request->has('filter.to_date')) {
+                $tasks = $tasks
+                    ->whereDate('due_date', '>=', $request->input('filter.from_date'))
+                    ->whereDate('due_date', '<=', $request->input('filter.to_date'));
+
             }
         }
 
