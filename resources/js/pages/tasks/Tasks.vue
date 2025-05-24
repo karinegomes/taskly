@@ -22,10 +22,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 const columns = [
   { key: 'title', label: 'Title' },
   { key: 'description', label: 'Description' },
-  { key: 'status', label: 'Status' },
-  { key: 'priority', label: 'Priority' },
-  { key: 'due_date', label: 'Due date' },
-  { key: 'assigned_to', label: 'Assigned to' },
+  { key: 'formatted_status', label: 'Status' },
+  { key: 'formatted_priority', label: 'Priority' },
+  { key: 'formatted_due_date', label: 'Due date' },
+  { key: 'formatted_assigned_to', label: 'Assigned to' },
 ];
 
 const page = usePage();
@@ -46,6 +46,10 @@ async function handleSortChange(_sort: object[]) {
   sort.value = _sort;
 
   await fetch();
+}
+
+function handleEdit(item: object) {
+  router.visit(`/tasks/${item.id}/edit`);
 }
 
 watch(
@@ -110,8 +114,10 @@ onMounted(async () => {
         :striped="true"
         :hover="true"
         :meta="meta"
+        :has-actions="true"
         @on-page-change="handlePageChange"
         @on-sort-change="handleSortChange"
+        @on-edit="handleEdit"
       />
     </div>
     <Toast v-model:open="open" :message="page.props.flash?.success" />

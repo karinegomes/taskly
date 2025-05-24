@@ -13,6 +13,7 @@ export const useTasksStore = defineStore('tasks', {
   state: () => {
     return {
       tasks: [] as object[],
+      task: null as object | null,
       meta: null as object | null,
       sort: [] as object[],
       filter: {
@@ -38,6 +39,17 @@ export const useTasksStore = defineStore('tasks', {
         if (response.status === 200) {
           this.tasks = response.data.data;
           this.meta = response.data.meta;
+        }
+      } catch (error) {
+        // TODO
+      }
+    },
+    async fetchTask(id: number) {
+      try {
+        const response = await axios.get(route("api.tasks.show", id));
+
+        if (response.status === 200) {
+          this.task = response.data.data;
         }
       } catch (error) {
         // TODO

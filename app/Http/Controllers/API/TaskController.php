@@ -39,4 +39,11 @@ class TaskController extends Controller
 
         return TaskResource::collection($tasks);
     }
+
+    public function show($id)
+    {
+        $task = Task::with('assignee')->findOrFail($id);
+
+        return new TaskResource($task);
+    }
 }

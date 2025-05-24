@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { onMounted, ref } from 'vue';
@@ -11,6 +11,8 @@ import DateInput from '@/components/ui/input/DateInput.vue';
 import { useUsersStore } from '@/stores/users.store';
 import { storeToRefs } from 'pinia';
 import { statusOptions, priorityOptions } from '@/constants/options';
+import { useTasksStore } from '@/stores/tasks.store';
+import { parseDate } from '@internationalized/date';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -21,6 +23,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const { fetchUsers } = useUsersStore();
 const { users: usersList } = storeToRefs(useUsersStore());
+const { fetchTask } = useTasksStore();
+const { task } = storeToRefs(useTasksStore());
+const page = usePage();
 
 const dueDate = ref(null);
 
@@ -42,14 +47,45 @@ const handleSubmit = () => {
     form.due_date = date.toISOString().split('T')[0];
   }
 
-  form.post('/tasks', {
-    onSuccess: () => {
-      form.reset();
-    },
-  });
+  if (!page.props.edit) {
+    form.post('/tasks', {
+      onSuccess: () => {
+        form.reset();
+      },
+    });
+  } else {
+    form.put(`/tasks/${page.props.task_id}`, {
+      onSuccess: () => {
+        form.reset();
+      },
+    });
+  }
+};
+
+const initTask = async () => {
+  const taskId = page.props.task_id;
+
+  await fetchTask(taskId);
+
+  if (task.value) {
+    form.title = task.value.title;
+    form.description = task.value.description;
+    form.status = task.value.status;
+    form.priority = task.value.priority;
+    form.assigned_to = task.value.assigned_to;
+
+    if (task.value.due_date) {
+      dueDate.value = parseDate(task.value.due_date.split('T')[0]);
+    }
+  }
+
 };
 
 onMounted(async () => {
+  if (page.props.edit) {
+    await initTask();
+  }
+
   await fetchUsers();
 })
 </script>
@@ -111,7 +147,14 @@ onMounted(async () => {
 
         <!-- Submit Button -->
         <div class="pt-4">
-          <Button type="submit" :loading="form.processing"> Create task </Button>
+          <Button type="submit" :loading="form.processing">
+            <template v-if="page.props.edit">
+              Update task
+            </template>
+            <template v-else>
+              Create task
+            </template>
+          </Button>
         </div>
       </form>
     </div>

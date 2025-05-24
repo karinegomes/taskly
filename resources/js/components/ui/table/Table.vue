@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Pagination from '@/components/ui/Pagination.vue';
 import { ref } from 'vue';
+import { Button } from '@/components/ui/button';
 
 interface Column {
   key: string;
@@ -13,11 +14,12 @@ interface TableProps {
   striped?: boolean;
   hover?: boolean;
   meta?: any;
+  hasActions?: boolean;
 }
 
 defineProps<TableProps>();
 
-const emits = defineEmits(['onPageChange', 'onSortChange']);
+const emits = defineEmits(['onPageChange', 'onSortChange', 'onEdit']);
 
 const sort = ref<{ key: string; direction: 'asc' | 'desc' }[]>([]);
 
@@ -41,6 +43,10 @@ const sortIndicator = (columnKey: string) => {
 
 const onPageChange = (page: number) => {
   emits('onPageChange', page);
+}
+
+const onEdit = (item: object) => {
+  emits('onEdit', item);
 }
 </script>
 
@@ -77,6 +83,12 @@ const onPageChange = (page: number) => {
           class="px-6 py-4"
         >
           {{ row[column.key] }}
+        </td>
+        <td v-if="hasActions" class="flex gap-4 px-6 py-4 justify-end">
+          <Button variant="outline" @click="onEdit(row)">
+            Edit
+          </Button>
+          <span>Delete</span>
         </td>
       </tr>
       </tbody>

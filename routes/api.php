@@ -13,4 +13,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('api.tasks.index');
+    Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('api.tasks.show');
 });

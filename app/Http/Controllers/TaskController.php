@@ -20,6 +20,11 @@ class TaskController extends Controller
         return Inertia::render('tasks/CreateTask');
     }
 
+    public function edit($id)
+    {
+        return Inertia::render('tasks/CreateTask', ['task_id' => $id, 'edit' => true]);
+    }
+
     public function store(StoreTaskRequest $request)
     {
         $task = Task::create([
@@ -33,5 +38,16 @@ class TaskController extends Controller
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Task created successfully.');
+    }
+
+    public function update($id, StoreTaskRequest $request)
+    {
+        $task = Task::find($id);
+
+        if ($task) {
+            $task->update($request->all());
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Task updated successfully.');
     }
 }
