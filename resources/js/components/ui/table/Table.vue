@@ -19,7 +19,7 @@ interface TableProps {
 
 defineProps<TableProps>();
 
-const emits = defineEmits(['onPageChange', 'onSortChange', 'onEdit']);
+const emits = defineEmits(['onPageChange', 'onSortChange', 'onEdit', 'onDelete']);
 
 const sort = ref<{ key: string; direction: 'asc' | 'desc' }[]>([]);
 
@@ -48,6 +48,10 @@ const onPageChange = (page: number) => {
 const onEdit = (item: object) => {
   emits('onEdit', item);
 }
+
+const onDelete = (item: object) => {
+  emits('onDelete', item);
+};
 </script>
 
 <template>
@@ -85,10 +89,12 @@ const onEdit = (item: object) => {
           {{ row[column.key] }}
         </td>
         <td v-if="hasActions" class="flex gap-4 px-6 py-4 justify-end">
-          <Button variant="outline" @click="onEdit(row)">
+          <Button variant="secondary" @click="onEdit(row)">
             Edit
           </Button>
-          <span>Delete</span>
+          <Button variant="destructive" @click="onDelete(row)">
+            Delete
+          </Button>
         </td>
       </tr>
       </tbody>

@@ -55,6 +55,17 @@ export const useTasksStore = defineStore('tasks', {
         // TODO
       }
     },
+    async deleteTask(id: number) {
+      try {
+        const response = await axios.delete(route("api.tasks.destroy", id));
+
+        if (response.status === 200) {
+          // this.task = response.data.data;
+        }
+      } catch (error) {
+        // TODO
+      }
+    },
     resetFilters() {
       this.filter = {
         status: null,

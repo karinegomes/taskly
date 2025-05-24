@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('assigned_to')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

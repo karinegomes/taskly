@@ -46,4 +46,12 @@ class TaskController extends Controller
 
         return new TaskResource($task);
     }
+
+    public function destroy($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->delete();
+
+        return 'ok';
+    }
 }

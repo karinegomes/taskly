@@ -29,7 +29,7 @@ const columns = [
 ];
 
 const page = usePage();
-const { fetch, resetFilters } = useTasksStore();
+const { fetch, resetFilters, deleteTask } = useTasksStore();
 const { tasks, meta, sort, filter } = storeToRefs(useTasksStore());
 
 const open = ref(false);
@@ -50,6 +50,15 @@ async function handleSortChange(_sort: object[]) {
 
 function handleEdit(item: object) {
   router.visit(`/tasks/${item.id}/edit`);
+}
+
+async function handleDelete(item: object) {
+  const confirmed = window.confirm('Are you sure you want to delete this task?');
+
+  if (confirmed) {
+    await deleteTask(item.id);
+    await fetch();
+  }
 }
 
 watch(
@@ -118,6 +127,7 @@ onMounted(async () => {
         @on-page-change="handlePageChange"
         @on-sort-change="handleSortChange"
         @on-edit="handleEdit"
+        @on-delete="handleDelete"
       />
     </div>
     <Toast v-model:open="open" :message="page.props.flash?.success" />

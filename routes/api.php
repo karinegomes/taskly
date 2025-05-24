@@ -14,4 +14,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('api.tasks.index');
     Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('api.tasks.show');
+    Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('api.tasks.destroy');
 });
